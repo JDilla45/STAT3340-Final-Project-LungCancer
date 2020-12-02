@@ -13,41 +13,6 @@ library(readxl)
 FInal_Project_Data_for_R_3340 <- read_excel("C:/Users/Daniel/Downloads/FInal Project Data for R 3340.xlsx")
 attach(FInal_Project_Data_for_R_3340)
 library(car)
-#initial model using all relevant factors
-
-cancermodel=lm(Incidence_Rate ~ Current_Percentage_Smoke + Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + Percent_Obese + Percent_Heathy_Weight + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay + Percent_Below_Poverty + Med_Income + Percent_without_HC + Percent_At_Least_Bachelors_Degree + Percent_At_Least_Grad_Highschool + Percent_Employed + Percent_born_in_USA)
-
-
-step(lm(Incidence_Rate~1),direction= "forward",scope =~ Current_Percentage_Smoke + Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + Percent_Obese + Percent_Heathy_Weight + Percent_No_Physical_Activity+ Percent_Below_Poverty + Med_Income + Percent_without_HC + Percent_At_Least_Bachelors_Degree + Percent_At_Least_Grad_Highschool + Percent_Employed + Percent_born_in_USA+Percent_Consumed_More_Than_1Fruit_PerDay)
-
-#best model
-
-bestmod=lm(formula = Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + 
-    Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + 
-    Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + 
-    Percent_Consumed_More_Than_1Vegetable_PerDay + Percent_Below_Poverty + 
-    Percent_At_Least_Grad_Highschool)
-
-anova(bestmod)
-
-bestmodnoffforward=lm(formula = Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + 
-    Percent_Ever_Smoked_100_Cigarettes + Percent_No_Physical_Activity + 
-    Percent_without_HC + Percent_Workers_in_NonSmoking_Environment + 
-    Percent_Obese + Percent_born_in_USA )
-
-bestmodnoffbackward=lm(formula = Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + 
-    Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + 
-    Percent_Obese + Percent_No_Physical_Activity + Percent_Below_Poverty + 
-    Med_Income )
-
-
-summary(bestmod)
-summary(bestmodnoffforward)
-summary(bestmodnoffbackward)
-
-step(lm(Incidence_Rate~ Current_Percentage_Smoke + Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + Percent_Obese + Percent_Heathy_Weight + Percent_No_Physical_Activity+ Percent_Below_Poverty + Med_Income + Percent_without_HC  + Percent_At_Least_Grad_Highschool + Percent_Employed + Percent_born_in_USA),direction = "backward")
-
-vif(bestmod)
 ```
 
 
