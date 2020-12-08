@@ -1,0 +1,526 @@
+---
+title: "Lung and Bronchus Cancer Regression Analysis"
+authors: Alex Boutilier,Daniel Perry, and Calum Shea
+date: "12/11/2020"
+output:
+  html_document:
+    df_print: paged
+---
+Authors: "Alex Boutilier,Daniel Perry, and Calum Shea"
+
+Abstract:
+
+Lung and bronchus cancer are deadly cancers that target the cardiovascular system in the human body. In the United States, lung and bronchus cancer has only a 20.5% 5-year survival rate,  it makes up 22.4% of all cancer deaths, and is the second most common type of cancer. We perform a regression analysis of 
+lung and bronchus cancer rates (age-adjusted) in the United States. Our goal here is to find significant predictors that would increase/decrease lung and 
+bronchus cancer rates, so we may have a better understanding of where to focus our resources in fighting this disease. 
+
+Source: https://seer.cancer.gov/statfacts/html/lungb.html
+
+Introduction: 
+
+Regression analysis conducted to determine the most contributing factors to incidences of Lung and Bronchus cancer in the United States. We look at a variety of factors from different categories such as education, diet, smoking, and economic, using 2018 state-level data. Rather than developing a prediction model we are more so interested in the relationship between these variables and the incidence rate. If a given relationship proves to be strong and consistent across states then we can reasonably conclude that particular variable is a significant factor that it would be justified in directing policy towards at a country level given it is immune to changes across states. Reducing the incident rate of lung and bronchus cancer is desirable because the unprecedented amount of death, emotional damage, and financial cost that this disease burdens the US with.
+
+
+
+Import master data sheet
+
+```{r include=FALSE}
+library(readr)
+dataset = read_csv("C:/Users/Daniel/Downloads/MastersheetFinal.csv")
+```
+
+All data is categorized by state.
+
+
+Data Description:
+
+Incidence Data sourced from https://statecancerprofiles.cancer.gov/incidencerates/index.php
+
+Definitions:
+
+Total_Population: the population by state
+
+Incidence_Rate: the incidence rate of lung and bronchus cancer Age-Adjusted cases per 100,000
+
+Lower_95._Confidence_Interval and Upper_95._Confidence_Interval: the CI bounds for the incidence rate of lung and bronchus cancer
+
+Average_Annual_Count: the average annual count of lung and bronchus cancer by state
+
+Recent_Trend: the incidence rate trend
+
+Recent_5_Year.Trend_in_Incidence_Rates: the change in incidence rate of lung and bronchus cancer in the past 5 years
+
+
+Screening and Risk Factors Data sourced from https://statecancerprofiles.cancer.gov/risk/index.php
+
+
+Num_Respondents: for each risk factor refers to the number of people responding to the survey
+
+Current_Percentage_Smoke: the percentage of people who currently smoke answering the survey
+
+Percent_No_One_Allowed_Smoking_at_Home: the percentage of people where smoking is not allowed at home
+
+Percent_Ever_Smoked_100_Cigarettes: the percentage of people who have smoked over 100 cigarettes in their life
+
+Percent_Workers_in_NonSmoking_Environment: the percentage of workers where smoking is prohibited in their workplace
+
+Percent_Obese: the percentage of people aged 20+ that have a BMI that is greater or equal to 30
+
+Percent_Healthy_Weight: the percentage of people aged 20+ with a BMI between 18.5 and 25
+
+Percent_No_Physical_Activity: the percentage of people who engaged in no leisure-time physical activity
+
+Percent_Consumed_More_Than_1Fruit_PerDay: the percentage of people who consumed more than 1 fruit per day
+
+Percent_Consumed_More_Than_1Vegetable_PerDay: the percentage of people who consumed more than 1 vegetable per day
+
+
+Demographics sourced from https://data.world/uscensusbureau/2014-american-community-survey and https://statecancerprofiles.cancer.gov/demographics/index.php
+
+
+Disclaimer: We have converted certain population totals to percentages because the Incidence_Rate is per 100,000
+
+All_Below_Poverty: total population below the poverty line
+
+M_Below_Poverty: total male population below the poverty line
+
+F_Below_Poverty: total female population below the poverty line
+
+All_Above_Poverty: total population above the poverty line
+
+M_Above_Poverty: total male population above the poverty line
+
+F_Above_Poverty: total female population above the poverty line
+
+Med_Income: the median income of the entire population
+
+Med_Income_White: the median income of the white population
+
+Med_Income_Black: the median income of the black population
+
+Med_Income_Nat_Am: the median income of the national american population 
+
+Med_Income_Asian: the median income of the asian population 
+
+Med_Income_Hispanic: the median income of the hispanic population 
+
+M_With_HC: male population with health care
+
+M_Wihtout_HC: male population without healthcare
+
+F_With_HC: female population with health care
+
+F_Wihtout_HC: female population without healthcare
+
+All_With_HC: total population with healthcare
+
+All_Without_HC: total population without healthcare
+
+Percent_Without_HC: the percentage of population without healthcare
+
+Percent_At_Least_Grad_Highschool: the percentage of people that have at least graduated high school
+
+Percent_At_Least_Bachelors_Degree: the percentage of people that have completed at least a bachelors degree.
+
+Unique Data Point:
+
+We added a unique data point (as instructed) labeled "New State". New State's values are simply comprised of the averages of the variables in the real data. We chose this approach to mitigate the influence that an artificial data point would have on our analysis, because it is not representative of real world 
+data, and would therefore not enhance our understanding of the real world data.
+
+
+
+Methods:
+
+In this study, we tested multiple independent variables to see how they relate to incidence rates of lung and bronchus cancers in the United States.
+
+Research Data
+
+Our data contains many variables such as smoking, obesity, and fruit and vegetable consumption that have been divided into further sub-variables (for example; smoking one hundred cigarettes in their life, allowed smoking in their house, and more). The data had been found within each state of the United States of America and certain population totals had been converted to percentages to avoid miscalculations when it came to measuring the incidence rate(per 100,000 citizens), so that everything would be scaled.
+
+Data Analysis
+
+For analyzing the data, we modeled all the data and removed the unwanted variables from our base model. We then did a Visual Exploratory Analysis where we investigated groups of predictors for possible correlation between them. After eliminating variables that were correlated with one or more others, we created a model with all relevant variables with no major signs or correlation.
+
+Checking for multicollinearity was our next step. We do this by analyzing the variance inflation factors (VIFs) of each variable in our base model and eliminating the one with the largest value. After this, we repeat the process until all remaining variables have VIFs of less than seven (7).
+
+After finding this, we had used the stepwise method to work backwards and find a model where all variables have VIFs above five (5). This gave us our preferred model.
+
+After finding our new model, we had to validate it. We did this by observing the coefficients in our model, compared the VIFs from our original model to the new one, and made sure the predicted responses of the response variable were not the wrong sign. The data also had to have its root-mean-square-error (RMSE) evaluated, along with its prediction accuracy. This was performed by splitting the data in two sets (training and testing).
+
+The next process was a residual analysis. To do this, we assessed the normality by making a Q-Q plot, assessed constant variance by plotting the residuals against fitted values and regressors (two separate plots), and removed states that were deemed to be outliers from both the Q-Q plot and residuals against fitted values. When this was done, we then examined the leverage points and influential observations by plotting residuals against leverage, and Cook's Distance versus observation. This led us to see what the highly influential point(s) were and should be removed; and thus, our conclusions could be found regarding our main objective in this analysis.
+
+
+Results:
+
+Lets have a look at a histogram of the Incidence Rate so we understand the range/frequency.
+```{r echo=FALSE}
+hist(dataset$Incidence_Rate,xlab = "Incidence Rate",border = "blue", main = "Histogram of Lung and Bronchus Cancer Incidence Rate per 100,000" )
+
+```
+
+Model Selection:
+
+assigning variables
+
+```{r}
+response = dataset[,4] #Y variable
+predictors = dataset[,10:59]
+```
+
+delete unwanted variables from predictors for the base model
+
+```{r}
+predictors[,c(2,4,6,8,10,12,14,16,18,19,20,21,23,24,25,27,28,29,30,31,32,33,34,35,36,37,40,42,43,44,45,47,48,49)] = NULL
+```
+
+Visual Exploratory Analysis:
+
+```{r include=FALSE}
+library(MPV) 
+library(faraway)
+library("ggplot2")                  
+library("GGally")
+```
+
+Checking groups of predictors that are likely to be correlated to each other
+
+```{r}
+smokingpredictors = predictors[,c(1,2,3,4)]
+ggpairs(smokingpredictors,title = "Pairs Plot All in %")
+```
+
+Current_Percentage_Smoke is highly correlated with both No_One_Allowed_Smoking_at_Home and Ever_Smoked_100_Cigarretes.Therefore lets omit Current_Percentage_Smoke from our predictors.
+
+```{r}
+predictors[,c(1)]=NULL
+
+healthpredictors = predictors[,c(4,5,6,7,8)]
+ggpairs(healthpredictors,title = "Pairs Plot All in %")
+```
+
+Percent_Obese and Percent_Healthy_Weight are highly correlated. 
+
+Therefore lets remove Percent_Healthy_Weight from the predictors.
+
+```{r}
+predictors[,c(5)]=NULL
+
+economicpredictors = predictors[,c(8,9,10,11,12,13,14)]
+
+ggpairs(economicpredictors,title = "Pairs Plot All in %")
+
+```
+
+Percent_Below_Poverty is strongly positively correlated with Med_Income and At_Least_Grad_Highschool.
+Unsurprisingly At_Least_Grad_Bachelors_Degree is highly correlated with Med_Income. 
+
+
+Here is the base model that includes all relevant variables:
+
+```{r}
+lungmodel = lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment
+               + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay
+               + Percent_Below_Poverty + Med_Income + Percent_without_HC + Percent_At_Least_Grad_Highschool + Percent_At_Least_Bachelors_Degree + Percent_Employed + Percent_born_in_USA, data = dataset)
+
+summary(lungmodel)
+```
+
+After fitting a least squares model with the predictors regressed on Incidence_Rate response variable, we have a well-performing model base model, shown by 
+the Adjusted R^2 of 0.8417.
+
+
+Checking for Multicollinearity:
+
+Checking the VIF's allows us to assess the degree to which that independent variable is orthogonal the others. 
+
+```{r}
+vif(lungmodel)
+```
+
+Med_Income has the largest VIF of 11.998, lets remove it
+
+```{r echo=FALSE}
+lungmodel2 = lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment
+               + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay
+               + Percent_Below_Poverty + Percent_without_HC + Percent_At_Least_Grad_Highschool + Percent_At_Least_Bachelors_Degree + Percent_Employed + Percent_born_in_USA, data = dataset)
+summary(lungmodel2)
+vif(lungmodel2)
+```
+
+Percent_born_in_USA has a VIF of 9.132, lets remove it 
+
+```{r echo=FALSE}
+lungmodel2 = lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment
+               + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay
+               + Percent_Below_Poverty + Percent_without_HC + Percent_At_Least_Grad_Highschool + Percent_At_Least_Bachelors_Degree + Percent_Employed, data = dataset)
+summary(lungmodel2)
+vif(lungmodel2)
+```
+
+Percent_At_Least_Bachelors_Degree has a VIF of 7.349, lets remove it
+
+```{r echo=FALSE}
+lungmodel2 = lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment
+                + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay
+                + Percent_Below_Poverty + Percent_without_HC + Percent_At_Least_Grad_Highschool + Percent_Employed, data = dataset)
+summary(lungmodel2)
+vif(lungmodel2)
+```
+
+The remaining VIF's are below 7 and we will move forward with finding the "best" model with stepwise in backwards direction.
+
+```{r echo=FALSE}
+selectedModel = step(lungmodel2)
+summary(selectedModel)
+vif(selectedModel)
+X = predictors[,c(1,2,3,4,5,6,7,8,11)]
+ggpairs(X,title = "Pairs Plot All in %")
+```
+
+Percent_At_Least_Grad_Highschool has a VIF above 5, lets remove it
+
+```{r echo=FALSE}
+finalModel = lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment
+                + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay
+                + Percent_Below_Poverty, data = dataset)
+summary(finalModel)
+vif(finalModel)
+```
+
+From the VIF's they indicate that the model is not likely affected by multicollinearity, however not all the parameters are statistically significant
+All the coefficients logically make sense except Consumed_More_Than_1Vegetable_PerDay which may have the wrong sign.
+
+```{r}
+Xfinal = predictors[,c(1,2,3,4,5,7,8)]
+ggpairs(Xfinal,title = "Pairs Plot All in %")
+```
+
+The predictors of the final model do not look linearly dependent. We must choose to go with either the final model or the selected model. The "selectedModel" might have minor multicollinearity problems but all the coefficients are significant. The final model has less multicollinearity problems 
+but not all the coefficients are statistically significant. We are moving forward with the selectedModel being our preferred model on the basis of its 
+significant predictors and higher adjusted r-squared.
+
+
+
+Validation of model:
+
+1. Analysis of the Model Coefficients and Predicted Values
+
+Are coefficients stable? Are signs and magnitudes reasonable?
+
+```{r echo=FALSE}
+selectedModel$coefficients
+```
+The coefficients Percent_Ever_Smoked_100_Cigarettes, Percent_Obese, Percent_No_One_Allowed_Smoking_at_Home, Percent_No_Physical_Activity all have signs that seem plausible, as well as reasonable magnitudes.The Percent_At_Least_Grad_Highschool coefficient has a negative magnitude that may be to large. 
+Percent_Consumed_More_Than_1Fruit_PerDay's coefficient and Percent_Consumed_More_Than_1Vegetable_PerDay's coefficient are not reasonable. 
+
+Possible explanations of coefficients signs, why we aren't necessarily concerned:
+
+Percent at least graduated high school, percent below poverty, and percent workers in non-smoking environment, yield some coefficients that may go against 
+our intuition, we did not determine any to be problematic as there are reasonable arguments to be made that would explain their effect. Percent at least 
+graduated high school having a negative impact on the incidence rate is perfectly reasonable as more educated individuals may have a better understanding of
+the impact of smoking among many other explanations. Percent below poverty having a negative impact on the incident rate may simply be because those with 
+less disposable income have less money to buy cigarettes with and as a result fewer of the poor develop lung and bronchus cancer. Working in a non-smoking 
+environment having a positive effect on the cancer rate may be the least intuitive but having to abstain from smoking all day without relief may result in 
+chain smoking outside of work.
+
+
+2. Are VIFs or other measures of collinearity raising flags?
+
+Now apply variance inflation factors to assess for multicollinearity. A large vif indicates that the variable is not linearly independent with the others.
+A large vif is typically a value exceeding 10.
+
+```{r}
+vif(lungmodel)
+```
+
+From our original model we can see that several predictors have larger vif's than 10 indicating that some of the predictors may have multicollinearity problems.
+
+```{r}
+vif(selectedModel)
+```
+
+However when we removed the predictors that were not significant via the stepwise regression method with backward elimination, all the vif's are well below 
+10. Thus multicollinearity seems to be less of a problem with our new selected model.Our selected model seems to not be affected by multicollinearity in such a way that would undermine the integrity of the model and the parameters are all statistically significant.
+
+
+Are predicted responses y of the wrong sign? Or outside of the range of those observed?
+```{r echo=FALSE}
+round(predict(selectedModel),2)
+print(dataset$Incidence_Rate)
+```
+The predicted responses of Incidence_Rate from the selectedModel are all the correct sign and well within the range of those that were observed.
+
+
+We will now split the data into training and testing sets to evaluate the RMSE and prediction accuracy
+
+```{r}
+set.seed(1)
+
+ratio=20
+
+for(i in 1:5){
+  
+  train = sample(c(1:length(dataset$Incidence_Rate)),ratio)
+  traindat = dataset[train, ]
+  testdat = dataset[-train, ]
+  
+  trainmodel = lm(formula = Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + 
+                   Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + 
+                   Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + 
+                   Percent_Consumed_More_Than_1Vegetable_PerDay + Percent_Below_Poverty+ Percent_At_Least_Grad_Highschool, data = traindat)
+  summary(trainmodel)
+  
+  predic = predict(selectedModel,testdat)
+  
+  plot(testdat$Incidence_Rate,predic,xlab = "Observed Incidence Rate",ylab = "Predicted Incidence Rate")
+  abline(c(0,1))
+  
+  RMSE = sqrt(sum((predic-testdat$Incidence_Rate)^2)/length(predic))
+  
+  
+  print(c(i,RMSE))
+  
+}
+```
+
+The RMSE never exceeds 5, this is small and indicates that the model predictions are fairly accurate especially in comparison to 
+range of our Incidence Rate data. Also looking at the plot of observed vs predictions all the data points are very close to the line which is what we want.
+
+
+Calling necessary packages
+
+```{r include=FALSE}
+masterdat = dataset
+
+attach(masterdat)
+library(car)
+```
+
+Residual Analysis:
+
+Assessing Normality: 
+
+To determine whether our residuals fulfill the assumption of being normally distributed we generated a "QQ Plot". It appears that data points 32 (New 
+Mexico), and 51 (Wyoming) are severe outliers in this test of normality and should therefore be considered for removal from the data if proved to be 
+influential. Other than that, there is no other obvious departure from normality in this plot.
+
+```{r echo=FALSE}
+plot(selectedModel, which = 2,sub="")
+```
+
+After removing 32 (New Mexico) and 51 (Wyoming), we see a more acceptable distribution as the points more accurately approximate a straight line.
+
+```{r echo=FALSE}
+newdat=masterdat[-c(32,51),]
+
+selectedModel2=lm(Incidence_Rate ~ Percent_No_One_Allowed_Smoking_at_Home + Percent_Ever_Smoked_100_Cigarettes + Percent_Workers_in_NonSmoking_Environment + Percent_Obese + Percent_No_Physical_Activity + Percent_Consumed_More_Than_1Fruit_PerDay + Percent_Consumed_More_Than_1Vegetable_PerDay + Percent_Below_Poverty + Percent_At_Least_Grad_Highschool,data=newdat)
+
+plot(selectedModel2,which = 2,sub="")
+```
+
+Assessing Constant Variance: 
+
+To determine whether our residuals fulfill the assumption of having constant variance, we generated a plot of the residuals against the fitted values from 
+the model. Again data points 32 (New Mexico) and 51 (Wyoming) raise concern as they are the only severe outliers. Besides that, we see generally equal 
+variance around the mean of zero.
+
+```{r echo=FALSE}
+plot(selectedModel,which=1,sub="")
+```
+
+
+After removing 32 (New Mexico) and 51 (Wyoming), there are still several mild outliers but not nearly as severe. There is no obvious departure from our equal variance assumption here. Thus, we have satisfied this assumption.
+
+```{r echo=FALSE}
+plot(selectedModel2,which = 1,sub="")
+```
+
+Plotting Residuals against Regressors: 
+
+Another check for constant variance. Plotting the residuals against our regressors will provide reassurance for our constant variance assumption that may
+not have been picked up in our residuals vs fitted values plot. We will also be able to make sure that there is not any type of unwanted relationship 
+between the regressors and our error such as a quadratic or "funnel" pattern. The partial plots contain roughly equal variance and do not suggest there are 
+any serious issues. Potentially influential observations are repeatedly showing up in our tests and will be assessed and considered for removal in the 
+following section of our analysis.
+
+```{r echo=FALSE}
+plot(resid(selectedModel),masterdat$Percent_No_One_Allowed_Smoking_at_Home,xlab = "Residuals", ylab="Percent No One Allowed Smoking at Home")
+
+plot(resid(selectedModel),masterdat$Percent_Ever_Smoked_100_Cigarettes,xlab="Residuals",ylab="Percent Ever Smoked 100 Cigarettes")
+
+plot(resid(selectedModel),masterdat$Percent_Workers_in_NonSmoking_Environment,xlab = "Residuals", ylab="Percent Workers in Non=Smoking Environment")
+
+plot(resid(selectedModel),masterdat$Percent_Obese,xlab="Residuals", ylab="Percent Obese")
+
+plot(resid(selectedModel),masterdat$Percent_No_Physical_Activity, xlab="Residuals", ylab="Percent no Physical Activity")
+
+plot(resid(selectedModel),masterdat$Percent_Consumed_More_Than_1Fruit_PerDay, xlab="Residuals", ylab="Percent Consumed > 1 Fruit/Day")
+
+plot(resid(selectedModel),masterdat$Percent_Consumed_More_Than_1Vegetable_PerDay, xlab="Residuals", ylab="Percent Consumed > 1 Vegetable/Day")
+
+plot(resid(selectedModel),masterdat$Percent_Below_Poverty, xlab="Residuals",ylab="Percent Below Poverty")
+
+plot(resid(selectedModel),masterdat$Percent_At_Least_Grad_Highschool,xlab="Residuals", ylab = "Percent At Least Graduated High School")
+
+```
+
+
+Examining Leverage Points / Influential Observations: 
+
+Throughout our Residual Analysis several data points were exposed as severe outliers. We wish to know whether these data points are highly influential and therefore interfering with the accuracy of our model. To do so we will first plot residuals against leverage, and Cook's Distance vs observation. Cook's Distance measures the influence a data point has by measuring its distance from the rest of the data.
+
+
+```{r echo=FALSE}
+plot(selectedModel,which = 4,sub="", col="red")
+plot(selectedModel,which = 5,sub="")
+```
+
+We can see that data point 29 (Nevada) has a Cook's Distance value of approximately 1 which is considered to be influential. Data points 32 (New Mexico) and 51 (Wyoming) have smaller measures of approximately 0.2.For more clarity we will generate a Hat Matrix; a matrix that bears diagonal elements that represent the amount of leverage the corresponding data point in the data set has.
+
+
+```{r}
+#First Column (Intercept Column) of 1s
+one=c(rep(1,52))
+
+#matrix 
+x=matrix(c(one,Percent_No_One_Allowed_Smoking_at_Home,Percent_Ever_Smoked_100_Cigarettes,Percent_Workers_in_NonSmoking_Environment, Percent_Obese, Percent_No_Physical_Activity, Percent_Consumed_More_Than_1Fruit_PerDay, Percent_Consumed_More_Than_1Vegetable_PerDay, Percent_Below_Poverty, Percent_At_Least_Grad_Highschool),ncol= 10)
+
+
+hat_matrix=x %*% solve(t(x) %*% x) %*% t(x)
+
+#Looking for hat diagonals greater than 2p/n = 2*9/520 = 0.0346
+inf_data =c()
+
+for(i in 1:52){
+  if(hat_matrix[i,i] > (2*9/52)){
+    inf_data=append(inf_data,i)
+  }
+}
+
+inf_data
+
+print(c(hat_matrix[5,5],hat_matrix[8,8],hat_matrix[12,12],hat_matrix[29,29],hat_matrix[31,31],hat_matrix[45,45]))
+
+```
+From these calculations it is clear that data point 29 (Nevada) is a highly influential observations and should therefore be removed from our data. Although there are other observations that did not meet the standard of 2p/n from our hat matrix analysis (2p/n is twice the average size of the diagonal hat matrix 
+values), they were not nearly as extreme as Nevada, and did not show up in previous tests. Initially it was thought that New Mexico and Wyoming were cause 
+for concern, but they too are not extreme enough to be considered for removal.
+
+ 
+
+After conducting our analysis, we have a better understanding of the factors included and their effect on the incidence rate. One of the most interesting findings is that the variable “Current Percent Smoke” did not actually make it into our preferred model, rather, “percent ever smoked 100 cigarettes” was by far the most significant smoking factor increasing the incidence rate. This highlights the addictive and harmful properties of cigarettes as it may not just be the habitual smokers that are at risk. The most significant predictor in our model was “percent no physical activity”, it also had the largest coefficient which indicates it has the greatest impact due to the fact all of our predictors are scaled to percentages of population. It’s important to note that this analysis is done across all states, without specifying regional differences, differences in gender, or race, so these factors are nationally applicable and can therefore be used by anyone for bettering their understanding of lung and bronchus cancer risk, and adopting their behavior respectively.
+
+
+Conclusion: 
+
+Most prominently in our favored model "selectedModel" but also common among all the models were several very significant variables: Percent Obese, Percent 
+ever smoked 100 cigarettes, and percent no physical activity which had the highest coefficient in our favored model of 1.4321 indicating that a 1% increase 
+in the population who partake in no physical activity would result in a 1.4321 increase in the incidence rate per 100,000. We ran into potential issues 
+specifically with predictors in the dietary category (percent consumed more than 1 fruit/vegetable per day), having significant and positive effects on the 
+cancer rate (increasing the rate) which runs contradictory to the latest cancer research that suggests increasing fruit and vegetable consumption would 
+decrease the rate. However, after several tests for multicollinearity, sufficient residual analysis results, and model validation, we determined there was 
+no significant enough presence of factors that would undermine the integrity of the model. It is important to note that further data collection would be 
+useful for eliminating any possible interference that is having an effect on the dietary variable coefficients. Our model had an adjusted r-squared value of 0.8524 which we are confident in for any interpolation. As far as extrapolation, we would encourage further data collection before using the model for predictive purposes given the possibility of incorrect coefficient signs. Overall, the analysis performed supports the hypothesis that in order to decrease the incident rate of lung and bronchus cancer in the United States a focus on increasing exercise participation, promoting weight loss and/or weight gain prevention, and decrease smoking rates would be effective means to do so. 
+
+
+
