@@ -1022,7 +1022,6 @@ predictions are fairly accurate especially in comparison to range of our
 Incidence Rate data. Also looking at the plot of observed vs predictions
 all the data points are very close to the line which is what we want.
 
-Calling necessary packages
 
 Residual Analysis:
 
