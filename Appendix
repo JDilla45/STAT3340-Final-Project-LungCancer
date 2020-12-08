@@ -1,0 +1,33 @@
+Appendix:
+
+National Cancer Institute. (2013-2017). Incidence Rate Report by State [Data file]. Retrieved from https://statecancerprofiles.cancer.gov/incidencerates/index.php?stateFIPS=00&areatype=state&cancer=001&race=00&sex=0&age=001&stage=999&year=0&type=incd&sortVariableName=rate&sortOrder=desc#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Healthy Weight (BMI 18.5 to <25) [Data file]. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=dietex&risk=v01&race=00&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Obese (BMI >= 30) [Data file]. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=dietex&risk=v02&race=00&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Consumed 1 or More Fruits per Day. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=dietex&risk=v50&race=00&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Consumed 1 or More Vegetables per Day. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=dietex&risk=v51&race=00&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Current Smoker. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=smoke&risk=v19&race=00&sex=0&datatype=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Ever Smoked 100 Cigarettes. Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=smoke&risk=v28&race=00&sex=0&datatype=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Percent of Workers in Non-Smoking Environments (All People). Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=smoke&risk=v31&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (Directly Estimated 2019 BRFSS Data). Percent of People Who Answered No One is Allowed to Smoke Anywhere Inside Their Home (All People). Retrieved from https://statecancerprofiles.cancer.gov/risk/index.php?topic=smoke&risk=v34&sex=0&type=risk&sortVariableName=default&sortOrder=default#results
+
+National Cancer Institute. (2014-2018 American Community Survey 5-Year Data). Education: At least high school. Retrieved from https://statecancerprofiles.cancer.gov/demographics/index.php?stateFIPS=00&areatype=state&topic=ed&demo=00109&sex=0&type=manyareacensus&sortVariableName=value&sortOrder=default#results
+
+National Cancer Institute. (2014-2018 American Community Survey 5-Year Data). Education: At least bachelors degree. Retrieved from https://statecancerprofiles.cancer.gov/demographics/index.php?stateFIPS=00&areatype=state&topic=ed&demo=00006&race=00&sex=0&type=manyareacensus&sortVariableName=value&sortOrder=default#results
+
+American Community Survey (ACS). (2011-2015). Income. Retrieved from https://data.world/uscensusbureau/acs-2015-5-e-income
+
+American Community Survey (ACS). (2011-2015). ForeignBirth. Retrieved from https://data.world/uscensusbureau/acs-2015-5-e-foreignbirth
+
+American Community Survey (ACS). (2011-2015). Poverty. Retrieved from https://data.world/uscensusbureau/acs-2015-5-e-poverty
+
+American Community Survey (ACS). (2011-2015). HealthInsurance. Retrieved from https://data.world/uscensusbureau/acs-2015-5-e-healthinsurance
+
+RMD File: See File on main branch of repository
